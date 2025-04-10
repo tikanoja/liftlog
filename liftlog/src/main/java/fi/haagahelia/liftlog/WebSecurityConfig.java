@@ -21,16 +21,21 @@ public class WebSecurityConfig {
 	@Autowired
 	private UserDetailServiceImpl userDetailsService;
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-		MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
-		return http
-			.authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-				.requestMatchers(mvcMatcherBuilder.pattern("/css/**"), mvcMatcherBuilder.pattern("/signup"), mvcMatcherBuilder.pattern("/saveuser")).permitAll()
-				.anyRequest().authenticated())
-			.formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/index", true).permitAll()) // todo this should lead to the correct place
-			.logout(logout -> logout.permitAll()).build();
-	}
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+        MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
+        return http
+            .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
+                .requestMatchers(mvcMatcherBuilder.pattern("/css/**"), mvcMatcherBuilder.pattern("/signup"), mvcMatcherBuilder.pattern("/saveuser")).permitAll()
+                .anyRequest().authenticated())
+            .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/index", true).permitAll())
+            .logout(logout -> logout
+                .logoutUrl("/logout") // URL to trigger logout
+                .logoutSuccessUrl("/login") // Redirect to /login after logout
+                .invalidateHttpSession(true) // Invalidate session
+                .deleteCookies("JSESSIONID")) // Delete session cookies
+            .build();
+    }
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
