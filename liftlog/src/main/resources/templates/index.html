@@ -10,11 +10,33 @@
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <h2 class="text-center mb-4">Welcome</h2>
-                    
+
+                    <!-- List of Workouts -->
+                    <div class="mb-4">
+                        <h4>Your Workouts</h4>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" th:each="workout : ${workouts}">
+                                <span th:text="${workout.name}"></span>
+                                <div>
+                                    <!-- Delete Button -->
+                                    <form th:action="@{/deleteworkout/{id}(id=${workout.id})}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm">Del</button>
+                                    </form>
+
+                                    <!-- Edit Button -->
+                                    <a th:href="@{/editworkout/{id}(id=${workout.id})}" class="btn btn-warning btn-sm">Edit</a>
+
+                                    <!-- Start Button -->
+                                    <a th:href="@{/startworkout/{id}(id=${workout.id})}" class="btn btn-success btn-sm">Start</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
                     <!-- Buttons -->
                     <div class="d-grid gap-3">
                         <a th:href="@{/newworkout}" class="btn btn-primary btn-block">New Workout</a>
-                        <form th:action="@{/logout}" method="post" class="d-grid"> <!-- spring security expects POST for logout -->
+                        <form th:action="@{/logout}" method="post" class="d-grid">
                             <button type="submit" class="btn btn-secondary btn-block">Logout</button>
                         </form>
                     </div>

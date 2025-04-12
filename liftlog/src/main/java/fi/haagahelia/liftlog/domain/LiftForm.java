@@ -1,66 +1,62 @@
 package fi.haagahelia.liftlog.domain;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 
 public class LiftForm {
-    @NotEmpty(message = "Username is required")
-    @Size(min = 3, max = 30, message = "Username must be between 3 and 30 characters")
-    private String username = "";
 
-    @NotEmpty(message = "Email is required")
-    @Size(max = 50, message = "Email must not exceed 50 characters")
-    private String email = "";
+    @NotEmpty(message = "Lift name is required")
+    private String name;
 
-    @NotEmpty(message = "Password is required")
-    @Size(min = 6, max = 30, message = "Password must be between 6 and 30 characters")
-    private String password = "";
+    @Min(value = 1, message = "Sets must be at least 1")
+    private int sets;
 
-    @NotEmpty(message = "Password confirmation is required")
-    @Size(min = 6, max = 30, message = "Password confirmation must be between 6 and 30 characters")
-    private String passwordCheck = "";
+    @Min(value = 1, message = "Reps must be at least 1")
+    private int reps;
 
-    @NotEmpty(message = "Role is required")
-    private String role = "USER";
+    @Min(value = 0, message = "Weight must be at least 0")
+    private float weight;
+
+    private float increment;
 
     // Getters and setters
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public int getSets() {
+        return sets;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setSets(int sets) {
+        this.sets = sets;
     }
 
-    public String getPassword() {
-        return password;
+    public int getReps() {
+        return reps;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setReps(int reps) {
+        this.reps = reps;
     }
 
-    public String getPasswordCheck() {
-        return passwordCheck;
+    public float getWeight() {
+        return weight;
     }
 
-    public void setPasswordCheck(String passwordCheck) {
-        this.passwordCheck = passwordCheck;
+    public void setWeight(float weight) {
+        this.weight = weight;
     }
 
-    public String getRole() {
-        return role;
+    public float getIncrement() {
+        return increment;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setIncrement(float increment) {
+        this.increment = increment;
     }
 }

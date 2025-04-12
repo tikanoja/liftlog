@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Edit Workout</title>
+        <link type="text/css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    </head>
+    <body>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h2 class="text-center mb-4" th:text="'Edit Workout: ' + ${workout.name}"></h2>
+
+                    <!-- Debug information -->
+                    <div class="alert alert-info">
+                        <p>Number of lifts: <span th:text="${lifts.size()}"></span></p>
+                    </div>
+
+                    <!-- List of Lifts -->
+                    <div class="mb-4">
+                        <h4>Lifts</h4>
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" th:each="lift : ${lifts}">
+                                <!-- Use individual expressions instead of concatenation -->
+                                <span>
+                                    <span th:text="${lift.name}"></span> - 
+                                    <span th:text="${lift.sets}"></span> x
+                                    <span th:text="${lift.reps}"></span> @ 
+                                    <span th:text="${lift.weight}"></span>kg
+                                </span>
+                                <div>
+                                    <!-- Edit Lift Button -->
+                                    <a th:href="@{/workout/{workoutId}/editlift/{liftId}(workoutId=${workout.id}, liftId=${lift.id})}" class="btn btn-warning btn-sm">Edit</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Add Lift Button -->
+                    <div class="d-grid">
+                        <a th:href="@{/workout/{id}/editlift/0(id=${workout.id})}" class="btn btn-primary">Add Lift</a>
+                    </div>
+
+                    <!-- Back Button -->
+                    <div class="d-grid">
+                        <a th:href="@{/index}" class="btn btn-secondary">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

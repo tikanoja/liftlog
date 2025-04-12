@@ -27,6 +27,7 @@ public class WebSecurityConfig {
         return http
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                 .requestMatchers(mvcMatcherBuilder.pattern("/css/**"), mvcMatcherBuilder.pattern("/signup"), mvcMatcherBuilder.pattern("/saveuser")).permitAll()
+                .requestMatchers(mvcMatcherBuilder.pattern("/deleteworkout/**")).authenticated() // Allow authenticated users to delete workouts
                 .anyRequest().authenticated())
             .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/index", true).permitAll())
             .logout(logout -> logout
