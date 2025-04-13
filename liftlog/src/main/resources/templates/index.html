@@ -23,11 +23,14 @@
                                         <button type="submit" class="btn btn-danger btn-sm">Del</button>
                                     </form>
 
-                                    <!-- Edit Button -->
-                                    <a th:href="@{/editworkout/{id}(id=${workout.id})}" class="btn btn-warning btn-sm">Edit</a>
+                                    <!-- Edit Button - only show if workout is NOT active -->
+                                    <a th:if="${!workout.active}" th:href="@{/editworkout/{id}(id=${workout.id})}" class="btn btn-warning btn-sm">Edit</a>
 
-                                    <!-- Start Button -->
-                                    <a th:href="@{/startworkout/{id}(id=${workout.id})}" class="btn btn-success btn-sm">Start</a>
+                                    <!-- Start/Resume Button - only show if workout has lifts -->
+                                    <form th:if="${not #lists.isEmpty(workout.lifts)}" th:action="@{/startworkout/{id}(id=${workout.id})}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-success btn-sm" 
+                                                th:text="${workout.active} ? 'Resume' : 'Start'">Start</button>
+                                    </form>
                                 </div>
                             </li>
                         </ul>

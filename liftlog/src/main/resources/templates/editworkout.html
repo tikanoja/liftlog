@@ -31,16 +31,21 @@
                                 <div>
                                     <!-- Edit Lift Button -->
                                     <a th:href="@{/workout/{workoutId}/editlift/{liftId}(workoutId=${workout.id}, liftId=${lift.id})}" class="btn btn-warning btn-sm">Edit</a>
+                                    
+                                    <!-- Delete Lift Button -->
+                                    <form th:action="@{/workout/{workoutId}/deletelift/{liftId}(workoutId=${workout.id}, liftId=${lift.id})}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
                                 </div>
                             </li>
                         </ul>
                     </div>
 
                     <!-- Add Lift Button -->
-                    <div class="d-grid">
+                    <div class="d-grid mb-3">
                         <a th:href="@{/workout/{id}/editlift/0(id=${workout.id})}" class="btn btn-primary">Add Lift</a>
                     </div>
-
+                    
                     <!-- Back Button -->
                     <div class="d-grid">
                         <a th:href="@{/index}" class="btn btn-secondary">Back</a>

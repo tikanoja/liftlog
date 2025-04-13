@@ -27,12 +27,16 @@ public class Workout {
     @NotEmpty(message = "Workout name is required")
     @Column(name = "name", nullable = false)
     private String name;
+    
+    @Column(name = "active", nullable = false)
+    private boolean active = false;  // Default to inactive (false)
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "workout", cascade = CascadeType.ALL, orphanRemoval = true)
+    // delete all lifts when workout is deleted
     private List<Lift> lifts = new ArrayList<>();
 
     public Workout() {
@@ -57,6 +61,14 @@ public class Workout {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public boolean isActive() {
+        return active;
+    }
+    
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public User getUser() {

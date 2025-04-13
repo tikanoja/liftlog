@@ -39,6 +39,9 @@ public class Lift {
     @Column(name = "increment", nullable = false)
     private float increment;
 
+    @Column(name = "success", nullable = false)
+    private boolean success = false;
+
     @ManyToOne
     @JoinColumn(name = "workout_id", nullable = false)
     private Workout workout;
@@ -110,5 +113,13 @@ public class Lift {
 
     public void setWorkout(Workout workout) {
         this.workout = workout;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }

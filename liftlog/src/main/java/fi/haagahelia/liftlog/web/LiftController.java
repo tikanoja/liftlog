@@ -1,6 +1,8 @@
 package fi.haagahelia.liftlog.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import fi.haagahelia.liftlog.domain.Lift;
 import fi.haagahelia.liftlog.domain.LiftRepository;
+import fi.haagahelia.liftlog.domain.User;
+import fi.haagahelia.liftlog.domain.UserRepository;
 import fi.haagahelia.liftlog.domain.Workout;
 import fi.haagahelia.liftlog.domain.WorkoutRepository;
 import jakarta.validation.Valid;
@@ -23,6 +27,9 @@ public class LiftController {
 
     @Autowired
     private WorkoutRepository workoutRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     // Display the "Edit Lift" page (for both adding and editing)
     @GetMapping("/workout/{workoutId}/editlift/{liftId}")
@@ -84,4 +91,26 @@ public class LiftController {
 
         return "redirect:/editworkout/" + workoutId;
     }
+
+    // Add this method to your LiftController class
+    @PostMapping("/workout/{workoutId}/deletelift/{liftId}")
+    public String deleteLift(@PathVariable("workoutId") Long workoutId,
+                            @PathVariable("liftId") Long liftId,
+                            @AuthenticationPrincipal UserDetails currentUser) {
+        User user = userRepository.findByUsername(currentUser.getUsername());
+        Workout workout = workoutRepository.findById(workoutId).orElse(null);
+        
+        // Ensure the workout belongs to the user
+        if (workout != null && workout.getUser().equals(user)) {
+            Lift lift = liftRepository.findById(liftId).orElse(null);
+            
+            // Ensure the lift exists and belongs to the workout
+            if (lift != null && lift.getWorkout().getId().equals(workoutId)) {
+                liftRepository.delete(lift);
+            }
+        }
+        
+        return "redirect:/editworkout/" + workoutId;
+    }
+
 }

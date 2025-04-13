@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Workout in Progress</title>
+        <link type="text/css" rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    </head>
+    <body>
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h2 class="text-center mb-4" th:text="${workout.name}"></h2>
+                    
+                    <!-- List of Lifts -->
+                    <div class="mb-4">
+                        <h4>Lifts</h4>
+                        <ul class="list-group mb-4">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" th:each="lift : ${lifts}">
+                                <!-- Display lift details -->
+                                <span>
+                                    <span th:text="${lift.name}"></span> - 
+                                    <span th:text="${lift.sets}"></span> x
+                                    <span th:text="${lift.reps}"></span> @ 
+                                    <span th:text="${lift.weight}"></span>kg
+                                </span>
+                                
+                                <!-- Success button -->
+                                <div>
+                                    <!-- Show "Success!" button if not already successful -->
+                                    <form th:if="${!lift.success}" th:action="@{/workout/{workoutId}/lift/{liftId}/success(workoutId=${workout.id}, liftId=${lift.id})}" method="post" style="display:inline;">
+                                        <button type="submit" class="btn btn-outline-success btn-sm">Success!</button>
+                                    </form>
+                                    
+                                    <!-- Show success indicator if already successful -->
+                                    <span th:if="${lift.success}" class="badge bg-success">Completed ✓</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Action buttons -->
+                    <div class="d-grid gap-2">
+                        <!-- Finish Workout button -->
+                        <form th:action="@{/finishworkout/{id}(id=${workout.id})}" method="post">
+                            <button type="submit" class="btn btn-success btn-block">Finish Workout</button>
+                        </form>
+                        
+                        <!-- Back to Index button -->
+                        <a th:href="@{/index}" class="btn btn-secondary btn-block">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
