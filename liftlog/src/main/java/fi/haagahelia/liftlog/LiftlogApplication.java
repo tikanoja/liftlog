@@ -10,5 +10,4 @@ public class LiftlogApplication {
         SpringApplication.run(LiftlogApplication.class, args);
     }
 
-    // TODO add command line runner here
 }
