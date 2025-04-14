@@ -29,7 +29,7 @@ public class Workout {
     private String name;
     
     @Column(name = "active", nullable = false)
-    private boolean active = false;  // Default to inactive (false)
+    private boolean active = false;  // default to inactive
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -87,7 +87,6 @@ public class Workout {
         this.lifts = lifts;
     }
     
-    // Helper methods for bi-directional relationship management
     public void addLift(Lift lift) {
         lifts.add(lift);
         lift.setWorkout(this);

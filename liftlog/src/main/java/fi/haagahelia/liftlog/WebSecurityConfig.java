@@ -27,14 +27,14 @@ public class WebSecurityConfig {
         return http
             .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                 .requestMatchers(mvcMatcherBuilder.pattern("/css/**"), mvcMatcherBuilder.pattern("/signup"), mvcMatcherBuilder.pattern("/saveuser")).permitAll()
-                .requestMatchers(mvcMatcherBuilder.pattern("/deleteworkout/**")).authenticated() // Allow authenticated users to delete workouts
+                .requestMatchers(mvcMatcherBuilder.pattern("/deleteworkout/**")).authenticated()
                 .anyRequest().authenticated())
             .formLogin(form -> form.loginPage("/login").defaultSuccessUrl("/index", true).permitAll())
             .logout(logout -> logout
-                .logoutUrl("/logout") // URL to trigger logout
-                .logoutSuccessUrl("/login") // Redirect to /login after logout
-                .invalidateHttpSession(true) // Invalidate session
-                .deleteCookies("JSESSIONID")) // Delete session cookies
+                .logoutUrl("/logout") // url to trigger logout
+                .logoutSuccessUrl("/login") // redir to login page after logout
+                .invalidateHttpSession(true) // invalidate current session
+                .deleteCookies("JSESSIONID")) // delete related session cookies
             .build();
     }
 

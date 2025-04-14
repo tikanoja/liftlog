@@ -31,17 +31,16 @@ public class LiftController {
     @Autowired
     private UserRepository userRepository;
 
-    // Display the "Edit Lift" page (for both adding and editing)
     @GetMapping("/workout/{workoutId}/editlift/{liftId}")
     public String editLiftPage(@PathVariable("workoutId") Long workoutId,
                                @PathVariable("liftId") Long liftId,
                                Model model) {
         Workout workout = workoutRepository.findById(workoutId).orElse(null);
         if (workout == null) {
-            return "redirect:/index"; // Redirect if the workout doesn't exist
+            return "redirect:/index"; // redir if the workout doesn't exist
         }
 
-        // If liftId is 0, this is for adding a new lift
+        // if liftId is 0, we are adding a new lift
         if (liftId == 0) {
             model.addAttribute("liftForm", new Lift());
         } else {
@@ -49,7 +48,7 @@ public class LiftController {
             if (lift != null && lift.getWorkout().getId().equals(workoutId)) {
                 model.addAttribute("liftForm", lift);
             } else {
-                return "redirect:/editworkout/" + workoutId; // Redirect if the lift doesn't exist or doesn't belong to the workout
+                return "redirect:/editworkout/" + workoutId; // redir if the lift doesn't exist
             }
         }
 
@@ -57,7 +56,6 @@ public class LiftController {
         return "editlift";
     }
 
-    // Handle saving a lift (both adding and editing)
     @PostMapping("/workout/{workoutId}/savelift")
     public String saveLift(@PathVariable("workoutId") Long workoutId,
                            @Valid @ModelAttribute("liftForm") Lift liftForm,
@@ -68,14 +66,14 @@ public class LiftController {
 
         Workout workout = workoutRepository.findById(workoutId).orElse(null);
         if (workout == null) {
-            return "redirect:/index"; // Redirect if the workout doesn't exist
+            return "redirect:/index";
         }
 
-        // Check if this is an update or a new lift
+        // check if we are updating or adding a new lift
         if (liftForm.getId() != null) {
             Lift existingLift = liftRepository.findById(liftForm.getId()).orElse(null);
             if (existingLift != null && existingLift.getWorkout().getId().equals(workoutId)) {
-                // Update the existing lift
+                // updating existing lift
                 existingLift.setName(liftForm.getName());
                 existingLift.setSets(liftForm.getSets());
                 existingLift.setReps(liftForm.getReps());
@@ -84,7 +82,7 @@ public class LiftController {
                 liftRepository.save(existingLift);
             }
         } else {
-            // Add a new lift
+            // adding a new lift
             liftForm.setWorkout(workout);
             liftRepository.save(liftForm);
         }
@@ -92,7 +90,6 @@ public class LiftController {
         return "redirect:/editworkout/" + workoutId;
     }
 
-    // Add this method to your LiftController class
     @PostMapping("/workout/{workoutId}/deletelift/{liftId}")
     public String deleteLift(@PathVariable("workoutId") Long workoutId,
                             @PathVariable("liftId") Long liftId,
@@ -100,11 +97,9 @@ public class LiftController {
         User user = userRepository.findByUsername(currentUser.getUsername());
         Workout workout = workoutRepository.findById(workoutId).orElse(null);
         
-        // Ensure the workout belongs to the user
         if (workout != null && workout.getUser().equals(user)) {
             Lift lift = liftRepository.findById(liftId).orElse(null);
             
-            // Ensure the lift exists and belongs to the workout
             if (lift != null && lift.getWorkout().getId().equals(workoutId)) {
                 liftRepository.delete(lift);
             }

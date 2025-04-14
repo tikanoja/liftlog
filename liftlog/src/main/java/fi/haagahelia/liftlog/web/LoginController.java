@@ -36,8 +36,8 @@ public class LoginController {
         if (!bindingResult.hasErrors()) { // no validation errors
             if (signupForm.getPassword().equals(signupForm.getPasswordCheck())) { // check if passwords match
                 String pwd = signupForm.getPassword();
-		    	BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
-		    	String hashPwd = bc.encode(pwd);
+                BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+                String hashPwd = bc.encode(pwd);
 
                 User newUser = new User();
                 newUser.setPasswordHash(hashPwd);

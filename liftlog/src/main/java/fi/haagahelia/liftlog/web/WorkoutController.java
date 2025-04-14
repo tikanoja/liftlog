@@ -34,14 +34,12 @@ public class WorkoutController {
     @Autowired
     private LiftRepository liftRepository;
 
-    // Display the "New Workout" form
     @GetMapping("/newworkout")
     public String newWorkoutPage(Model model) {
         model.addAttribute("workoutForm", new WorkoutForm());
         return "newworkout";
     }
 
-    // Handle creating a new workout
     @PostMapping("/createworkout")
     public String createWorkout(@Valid @ModelAttribute("workoutForm") WorkoutForm workoutForm,
                                 BindingResult bindingResult,
@@ -59,7 +57,6 @@ public class WorkoutController {
         return "redirect:/index";
     }
 
-    // Handle deleting a workout
     @PostMapping("/deleteworkout/{id}")
     public String deleteWorkout(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetails currentUser) {
         User user = userRepository.findByUsername(currentUser.getUsername());
@@ -72,20 +69,18 @@ public class WorkoutController {
         return "redirect:/index";
     }
 
-    // Display the "Edit Workout" page, including all lifts for the workout
     @GetMapping("/editworkout/{id}")
     public String editWorkoutPage(@PathVariable("id") Long id, Model model, @AuthenticationPrincipal UserDetails currentUser) {
         User user = userRepository.findByUsername(currentUser.getUsername());
         Workout workout = workoutRepository.findById(id).orElse(null);
     
-        // Ensure the workout belongs to the logged-in user
         if (workout != null && workout.getUser().equals(user)) {
             model.addAttribute("workout", workout);
-            model.addAttribute("lifts", liftRepository.findByWorkout(workout)); // Pass lifts to the model
+            model.addAttribute("lifts", liftRepository.findByWorkout(workout)); // passing lifts to the model
             return "editworkout";
         }
     
-        return "redirect:/index"; // Redirect if the workout is not found or doesn't belong to the user
+        return "redirect:/index";
     }
 
     @PostMapping("/startworkout/{id}")
@@ -94,7 +89,7 @@ public class WorkoutController {
         Workout workout = workoutRepository.findById(id).orElse(null);
     
         if (workout != null && workout.getUser().equals(user)) {
-            // Set all other workouts to inactive first
+            // set all other workouts to inactive when starting a new one
             List<Workout> userWorkouts = workoutRepository.findByUser(user);
             for (Workout w : userWorkouts) {
                 if (w.isActive()) {
@@ -103,16 +98,15 @@ public class WorkoutController {
                 }
             }
     
-            // Set this workout to active
             workout.setActive(true);
 
+            // preset all lifts to success = false
             for (Lift lift : workout.getLifts()) {
                 lift.setSuccess(false);
             }
 
             workoutRepository.save(workout);
             
-            // Redirect to the workout page instead of index
             return "redirect:/workout/" + id;
         }
     
@@ -126,11 +120,9 @@ public class WorkoutController {
         User user = userRepository.findByUsername(currentUser.getUsername());
         Workout workout = workoutRepository.findById(workoutId).orElse(null);
         
-        // Ensure the workout belongs to the user
         if (workout != null && workout.getUser().equals(user)) {
             Lift lift = liftRepository.findById(liftId).orElse(null);
             
-            // Ensure the lift exists and belongs to the workout
             if (lift != null && lift.getWorkout().getId().equals(workoutId)) {
                 lift.setSuccess(true);
                 liftRepository.save(lift);
@@ -145,14 +137,13 @@ public class WorkoutController {
         User user = userRepository.findByUsername(currentUser.getUsername());
         Workout workout = workoutRepository.findById(id).orElse(null);
 
-        // Ensure the workout belongs to the logged-in user and is active
         if (workout != null && workout.getUser().equals(user)) {
             model.addAttribute("workout", workout);
             model.addAttribute("lifts", liftRepository.findByWorkout(workout));
             return "workout";
         }
 
-        return "redirect:/index"; // Redirect if the workout is not found or doesn't belong to the user
+        return "redirect:/index";
     }
 
     @PostMapping("/finishworkout/{id}")
@@ -161,23 +152,22 @@ public class WorkoutController {
         Workout workout = workoutRepository.findById(id).orElse(null);
     
         if (workout != null && workout.getUser().equals(user) && workout.isActive()) {
-            // Process each lift and adjust weights
+            // process each lift in the workout
             for (Lift lift : workout.getLifts()) {
                 float currentWeight = lift.getWeight();
                 float increment = lift.getIncrement();
                 
                 if (lift.isSuccess()) {
-                    // Success: Increase weight by increment
+                    // success: increase the weight by increment
                     lift.setWeight(currentWeight + increment);
                 } else {
-                    // Failure: Decrease weight by increment * 2
-                    // Ensure weight doesn't go below 0
+                    // failure: decrease the weight by two increments
                     float newWeight = currentWeight - (increment * 2);
                     lift.setWeight(Math.max(0, newWeight));
                 }
             }
             
-            // Mark workout as inactive
+            // mark finished workout as inactive
             workout.setActive(false);
             workoutRepository.save(workout);
         }
