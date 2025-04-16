@@ -101,9 +101,9 @@ public class WorkoutController {
             workout.setActive(true);
 
             // preset all lifts to success = false
-            for (Lift lift : workout.getLifts()) {
-                lift.setSuccess(false);
-            }
+            // for (Lift lift : workout.getLifts()) {
+                // lift.setSuccess(false);
+            // }
 
             workoutRepository.save(workout);
             
@@ -160,6 +160,7 @@ public class WorkoutController {
                 if (lift.isSuccess()) {
                     // success: increase the weight by increment
                     lift.setWeight(currentWeight + increment);
+                    lift.setSuccess(false);
                 } else {
                     // failure: decrease the weight by two increments
                     float newWeight = currentWeight - (increment * 2);
